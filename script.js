@@ -1,3 +1,4 @@
+let products = [];
 document.addEventListener('DOMContentLoaded', function () {
     fetch('products.json')
         .then(response => response.json())
@@ -22,9 +23,7 @@ function displayProducts(products) {
         productList.appendChild(productDiv);
     });
 }
-let products = [];
 let cart = [];
-document.addEventListener(DOMContentLoaded)
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     cart.push(product);
