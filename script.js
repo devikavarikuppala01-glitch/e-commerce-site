@@ -1,6 +1,6 @@
 let products = [];
 document.addEventListener('DOMContentLoaded', function () {
-    fetch('products.json')
+    fetch('db.json')
         .then(response => response.json())
         .then(data => {
             products = data;
