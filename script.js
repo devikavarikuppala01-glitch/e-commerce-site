@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch('db.json')
         .then(response => response.json())
         .then(data => {
-            products = data;
+            products = data.products;
             displayProducts(products);
         });
 });
