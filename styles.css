@@ -1,26 +1,56 @@
-#cart {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
+/* Layout container layout */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+/* Arrange the store display grid items */
+#productList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    float: left;
+    width: 65%;
+}
+
+/* Individual product cards */
+.product {
     border: 1px solid #ddd;
-    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.product img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover; /* Keeps images crisp and evenly proportioned */
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Shopping Cart styling aligned right */
+#cart {
+    float: right;
+    width: 30%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
 }
 
 .cart-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
 }
 
-#checkoutButton {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#checkoutButton:hover {
-    background-color: #0056b3;
-}
 
