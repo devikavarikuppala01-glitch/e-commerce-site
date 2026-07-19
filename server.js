@@ -20,6 +20,36 @@ app.get("/api/products", (req, res) => {
     res.json(products);
 });
 
-// Start the server
-app.listen(5000, () => {console.log("Server running on http://localhost:5000");
+
+
+let cart = []; // Shopping cart array
+
+// Add item to cart
+app.post("/api/cart", (req, res) => {
+    const product = req.body;
+    cart.push(product);
+    res.json({ message: "Product added to cart", cart });
 });
+
+// Get all cart items
+app.get("/api/cart", (req, res) => {
+    res.json(cart);
+});
+
+// Remove item from cart
+app.delete("/api/cart/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    cart = cart.filter(item => item.id !== id);
+    res.json({ message: "Product removed from cart", cart });
+});
+
+
+
+
+app.post("/api/checkout", (req, res) => {
+    const { cart, total } = req.body;
+    const orderId = Math.floor(Math.random() * 1000); // Simulate order ID generation
+    res.json({ message: "Order placed successfully", orderId });
+});
+
+app.listen(5000, () => console.log("Server running on http://localhost:5000"));

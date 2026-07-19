@@ -9,7 +9,10 @@
 <body>
     <header>
         <h1>E-Commerce Store</h1>
+        <div>
         <input type="text" id="searchBar" placeholder="Search for products...">
+        <button onclick="toggleCart()">Toggle Cart</button>
+        </div>
     </header>
     <main id="productList"></main>
 
@@ -23,6 +26,42 @@
     <footer>
         <p>© 2025 E-Commerce Store</p>
     </footer>
+    
+    <div class="main-layout">
+        <!-- 1. CRUCIAL: The JavaScript looks for this EXACT ID to print your products -->
+        <div id="products-container">
+            <!-- Products will be dynamically injected here by script.js -->
+        </div>
+
+        <!-- 2. CRUCIAL: Your toggleCart() and checkout() look for this sidebar -->
+        <div id="cartSidebar">
+            <h3>Shopping Cart</h3>
+            <div id="cart-items">
+                <!-- Selected items will show up here -->
+            </div>
+            <form id="checkoutForm">
+            <p><strong>Total: $<span id="cart-total">0</span></strong></p>
+            <input type="text" id="email" placeholder="Enter your email">
+            <br>
+            <button type="submit">Submit</button>
+            <button onclick="checkout()">Checkout</button>
+            <form id="checkoutForm">
+</form>
+        </div>
+    </div>
+<script>
+document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+    const email = document.getElementById("email").value;
+    if (!email.includes("@")) {
+        alert("Please enter a valid email address.");
+        e.preventDefault(); // Prevent form submission
+    }
+});
+</script>
+
+    <!-- 3. CRUCIAL: Link your script file at the very bottom -->
     <script src="script.js"></script>
 </body>
 </html>
+
+
