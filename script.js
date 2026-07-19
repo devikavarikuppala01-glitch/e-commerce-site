@@ -25,8 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     id: 1, 
                     name: "Premium Laptop", 
                     price: 999, 
-                    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500" 
-} 
+                    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500"  
                 },
                 { 
                     id: 2, 
