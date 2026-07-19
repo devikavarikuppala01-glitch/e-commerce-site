@@ -90,7 +90,7 @@ function displayProducts(productsToRender) {
             console.warn("Backend offline. Saving to browser LocalStorage instead.", error);
             
             // BACKUP CART LOGIC FOR NETLIFY:
-            let localCart = JSON.getItem("netlify_cart") ? JSON.parse(localStorage.getItem("netlify_cart")) : [];
+            let localCart = localStorage.getItem("netlify_cart") ? JSON.parse(localStorage.getItem("netlify_cart")) : [];
             localCart.push(product);
             localStorage.setItem("netlify_cart", JSON.stringify(localCart));
             
