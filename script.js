@@ -67,9 +67,10 @@ function displayProducts(productsToRender) {
 }
 
 // 3. Add individual selected product elements into cart storage array on the server
-function addToCart(productId) {
+    function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     if (product) {
+        // 1. Try to send it to the backend server first
         fetch("http://localhost:5000/api/cart", {
             method: "POST",
             headers: {
@@ -77,12 +78,28 @@ function addToCart(productId) {
             },
             body: JSON.stringify(product)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error("Backend offline");
+            return response.json();
+        })
         .then(() => {
             alert(`${product.name} added to the cart!`);
-            fetchCart(); // Instantly update user interface drawer list display
+            fetchCart(); // Update user interface
         })
-        .catch(error => console.error("Error adding to cart:", error));
+        .catch(error => {
+            console.warn("Backend offline. Saving to browser LocalStorage instead.", error);
+            
+            // BACKUP CART LOGIC FOR NETLIFY:
+            let localCart = JSON.getItem("netlify_cart") ? JSON.parse(localStorage.getItem("netlify_cart")) : [];
+            localCart.push(product);
+            localStorage.setItem("netlify_cart", JSON.stringify(localCart));
+            
+            alert(`${product.name} added to the cart! (Demo Mode)`);
+            
+            // Manually update the global cart array and trigger the view update
+            cart = localCart;
+            viewCart(); 
+        });
     }
 }
 
@@ -112,13 +129,22 @@ const cartList = document.getElementById("cartList");
 
 // 5. Fetch cart data from the server
 function fetchCart() {
-    fetch("http://localhost:5000/api/cart") // Adjust port according to your server settings
-        .then(response => response.json())
-        .then(data => {
-            cart = data; // Update the global cart array with server data
-            viewCart(); // Render the updated cart UI and calculate total
+    fetch("http://localhost:5000/api/cart")
+        .then(response => {
+            if (!response.ok) throw new Error("Backend offline");
+            return response.json();
         })
-        .catch(err => console.error("Error fetching cart:", err));
+        .then(data => {
+            cart = data; // Update global cart array with server data
+            viewCart(); // Render updated cart UI
+        })
+        .catch(error => {
+            console.warn("Backend offline. Fetching cart from browser memory.", error);
+            
+            // BACKUP CART LOAD FOR NETLIFY:
+            cart = localStorage.getItem("netlify_cart") ? JSON.parse(localStorage.getItem("netlify_cart")) : [];
+            viewCart(); 
+        });
 }
 
 // Remove matching data entities array index references out from operational records
@@ -126,19 +152,32 @@ function removeFromCart(id) {
     fetch(`http://localhost:5000/api/cart/${id}`, {
         method: "DELETE"
     })
-    .then(response => response.json())
-    .then(() => {
-        fetchCart(); // Refresh cart from server after deletion
+    .then(response => {
+        if (!response.ok) throw new Error("Backend offline");
+        return response.json();
     })
-    .catch(error => console.error("Error removing from cart:", error));
+    .then(() => {
+        fetchCart(); // Refresh from server
+    })
+    .catch(error => {
+        console.warn("Backend offline. Removing item from browser memory.", error);
+        
+        // BACKUP CART REMOVE FOR NETLIFY:
+        let localCart = localStorage.getItem("netlify_cart") ? JSON.parse(localStorage.getItem("netlify_cart")) : [];
+        // Remove just the first instance matching the ID
+        const index = localCart.findIndex(item => item.id === id);
+        if (index !== -1) {
+            localCart.splice(index, 1);
+        }
+        localStorage.setItem("netlify_cart", JSON.stringify(localCart));
+        
+        cart = localCart;
+        viewCart();
+    });
 }
 
 // Initial fetch of the cart on page load
 fetchCart();
-
-
-
-
 
 function calculateTotal() {
     return cart.reduce((total, item) => total + item.price, 0);
@@ -146,17 +185,43 @@ function calculateTotal() {
 
 function checkout() {
     const total = calculateTotal();
+    
     fetch("http://localhost:5000/api/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart, total }),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ cart, total })
     })
-    .then((response) => response.json())
-    .then((data) => {alert(`Order placed! Order ID: ${data.orderId}`);
-    window.print();
-})
-    .catch((error) => console.error("Error during checkout:", error));
+    .then(response => {
+        if (!response.ok) throw new Error("Backend offline");
+        return response.json();
+    })
+    .then(data => {
+        alert(`Order placed! Order ID: ${data.orderId}`);
+        window.print();
+    })
+    .catch(error => {
+        console.warn("Backend offline. Simulating checkout.", error);
+        
+        // BACKUP CHECKOUT FOR NETLIFY:
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+        
+        const mockOrderId = "NETLIFY-" + Math.floor(Math.random() * 900000 + 100000);
+        alert(`Order placed successfully! (Demo Mode)\nOrder ID: ${mockOrderId}\nTotal Paid: $${total}`);
+        
+        // Clear browser cart after successful checkout
+        localStorage.removeItem("netlify_cart");
+        cart = [];
+        viewCart();
+        
+        window.print();
+    });
 }
+
 
 
 
