@@ -1,6 +1,7 @@
 #  E-Commerce Application
 
 A fully functional full-stack e-commerce store layout built using a Node.js/Express backend server and a vanilla JavaScript frontend interface.
+Live Frontend Demo:  [Launch Live Site](https://https://cerulean-kitsune-6b9947.netlify.app/)
 
 ##  Project Features
 - **Live Inventory Data:** Fetches product details directly from an active Express API.
