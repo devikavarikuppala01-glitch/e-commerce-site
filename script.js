@@ -3,14 +3,47 @@ let products = [];
 let cart = [];
 
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Fetch live product data from your active Node.js server
+    // 1. Try to fetch live product data from your active Node.js server
     fetch("http://localhost:5000/api/products")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Local backend offline");
+            }
+            return response.json();
+        })
         .then(data => {
             products = data; // Save the fetched list to the global variable
             displayProducts(products); // Render products to the web view
+            console.log("Loaded products from local backend!");
         })
-        .catch(error => console.error("Error fetching data:", error));
+        .catch(error => {
+            console.warn("Backend server not found. Loading backup products instead:", error);
+            
+            // BACKUP PRODUCTS LIST FOR NETLIFY
+            const backupProducts = [
+                { 
+                    id: 1, 
+                    name: "Premium Laptop", 
+                    price: 999, 
+                    image: "https://images.unsplash.com/photo-1496181130204-755241544e3f?w=500&q=80" 
+                },
+                { 
+                    id: 2, 
+                    name: "Wireless Headphones", 
+                    price: 449, 
+                    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80" 
+                },
+                { 
+                    id: 3, 
+                    name: "Mechanical Keyboard", 
+                    price: 889, 
+                    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80" 
+                }
+            ];
+            
+            products = backupProducts; // Assign backups to the global array so add to cart works
+            displayProducts(products); // Render the backups onto the screen
+        });
 });
 
 // 2. Render the grid of items fetched from the backend server
