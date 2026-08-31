@@ -19,8 +19,9 @@ Navigate into the directory, install dependencies if required, and spin up the N
 \`\`\`bash
 node server.js
 \`\`\`
-The server will boot up and actively monitor requests at `http://localhost:5000`.
+The server will boot up and actively monitor requests at `http://localhost:5000`,'https://cerulean-kitsune-6b9947.netlify.app/'.
 
 ### 2. Launch the Web Interface
 Simply open the `index.html` file in any modern web browser to browse the catalog, view live layouts, and manage your cart.
-
+### 3. Video Demo
+https://www.loom.com/share/aa4a9c9047844c2b84237cc06b383ef8
